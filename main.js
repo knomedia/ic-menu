@@ -4,18 +4,20 @@
     define([
       'ember',
       './lib/components/ic-menu-item',
+      './lib/components/ic-menu-link',
       './lib/components/ic-menu-list',
       './lib/components/ic-menu-trigger',
       './lib/components/ic-menu',
       'ic-styled',
       './lib/templates'
-    ], function(Ember, Item, List, Trigger, Menu) {
-      return factory(Ember, Item, List, Trigger, Menu);
+    ], function(Ember, Item, Link, List, Trigger, Menu) {
+      return factory(Ember, Item, Link, List, Trigger, Menu);
     });
   } else if (typeof exports === 'object') {
     module.exports = factory(
       require('ember'),
       require('./lib/components/ic-menu-item'),
+      require('./lib/components/ic-menu-link'),
       require('./lib/components/ic-menu-list'),
       require('./lib/components/ic-menu-trigger'),
       require('./lib/components/ic-menu'),
@@ -26,12 +28,13 @@
     factory(
       Ember,
       root.ic.MenuItemComponent,
+      root.ic.MenuLinkComponent,
       root.ic.MenuListComponent,
       root.ic.MenuTriggerComponent,
       root.ic.MenuComponent
     );
   }
-}(this, function(Ember, Item, List, Trigger, Menu) {
+}(this, function(Ember, Item, Link, List, Trigger, Menu) {
 // </look-the-other-way>
 
   Ember.Application.initializer({
@@ -40,6 +43,7 @@
 
     initialize: function(container, application) {
       container.register('component:ic-menu-item', Item);
+      container.register('component:ic-menu-link', Link);
       container.register('component:ic-menu-list', List);
       container.register('component:ic-menu-trigger', Trigger);
       container.register('component:ic-menu', Menu);
@@ -49,6 +53,7 @@
 
   return {
     MenuItemComponent: Item,
+    MenuLinkComponent: Link,
     MenuListComponent: List,
     MenuTriggerComponent: Trigger,
     MenuComponent: Menu

@@ -29,8 +29,12 @@
       this.get('parentView').close();
       Ember.run.next(this, function() {
         if (wasKeyboard) { this.get('parentView').focusTrigger(); }
-        this.sendAction('on-select', this);
+        this.clickAction();
       });
+    },
+
+    clickAction: function() {
+      this.sendAction('on-select', this);
     },
 
     keyDown: function(event) {
@@ -63,6 +67,40 @@
   });
 
   return MenuItemComponent;
+
+});
+
++function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([
+      'ember',
+      '.lib/components/ic-menu-item'
+      ], function(Ember, MenuItemComponent) { return factory(Ember, MenuItemComponent); });
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('ember'), require('./lib/components/ic-menu-item'));
+  } else {
+    root.ic = root.ic || {};
+    root.ic.MenuLinkComponent = factory(Ember, root.ic.MenuItemComponent);
+  }
+}(this, function(Ember, MenuItemComponent) {
+
+  var MenuLinkComponent = MenuItemComponent.extend({
+
+    tagName: 'ic-menu-link',
+
+    attributeBindings: [
+      'href'
+    ],
+
+    role: 'link',
+
+    clickAction: function() {
+      window.location = this.get('href');
+    },
+
+  });
+
+  return MenuLinkComponent;
 
 });
 
@@ -386,7 +424,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("<style>\nic-menu {\n  display: inline-block;\n}\n\nic-menu-list {\n  position: absolute;\n  display: none;\n}\n\nic-menu-list[aria-expanded=\"true\"] {\n  display: block;\n}\n\nic-menu-list {\n  outline: none;\n  background: #fff;\n  border: 1px solid #aaa;\n  border-radius: 3px;\n  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.25);\n  list-style-type: none;\n  padding: 2px 0px;\n  font-family: \"Lucida Grande\", \"Arial\", sans-serif;\n  font-size: 12px;\n}\n\nic-menu-item {\n  display: block;\n  padding: 4px 20px;\n  cursor: default;\n  white-space: nowrap;\n}\n\nic-menu-item:focus {\n  background: #3879D9;\n  color: #fff;\n  outline: none;\n}\n\nic-menu-item a {\n  color: inherit;\n  text-decoration: none;\n}\n</style>\n\n");
+  data.buffer.push("<style>\nic-menu {\n  display: inline-block;\n}\n\nic-menu-list {\n  position: absolute;\n  display: none;\n}\n\nic-menu-list[aria-expanded=\"true\"] {\n  display: block;\n}\n\nic-menu-list {\n  outline: none;\n  background: #fff;\n  border: 1px solid #aaa;\n  border-radius: 3px;\n  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.25);\n  list-style-type: none;\n  padding: 2px 0px;\n  font-family: \"Lucida Grande\", \"Arial\", sans-serif;\n  font-size: 12px;\n}\n\nic-menu-item, ic-menu-link {\n  display: block;\n  padding: 4px 20px;\n  cursor: default;\n  white-space: nowrap;\n}\n\nic-menu-item:focus, ic-menu-link:focus {\n  background: #3879D9;\n  color: #fff;\n  outline: none;\n}\n\nic-menu-item a, ic-menu-link a {\n  color: inherit;\n  text-decoration: none;\n}\n</style>\n\n");
   
 });
 
@@ -423,18 +461,20 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     define([
       'ember',
       './lib/components/ic-menu-item',
+      './lib/components/ic-menu-link',
       './lib/components/ic-menu-list',
       './lib/components/ic-menu-trigger',
       './lib/components/ic-menu',
       'ic-styled',
       './lib/templates'
-    ], function(Ember, Item, List, Trigger, Menu) {
-      return factory(Ember, Item, List, Trigger, Menu);
+    ], function(Ember, Item, Link, List, Trigger, Menu) {
+      return factory(Ember, Item, Link, List, Trigger, Menu);
     });
   } else if (typeof exports === 'object') {
     module.exports = factory(
       require('ember'),
       require('./lib/components/ic-menu-item'),
+      require('./lib/components/ic-menu-link'),
       require('./lib/components/ic-menu-list'),
       require('./lib/components/ic-menu-trigger'),
       require('./lib/components/ic-menu'),
@@ -445,12 +485,13 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     factory(
       Ember,
       root.ic.MenuItemComponent,
+      root.ic.MenuLinkComponent,
       root.ic.MenuListComponent,
       root.ic.MenuTriggerComponent,
       root.ic.MenuComponent
     );
   }
-}(this, function(Ember, Item, List, Trigger, Menu) {
+}(this, function(Ember, Item, Link, List, Trigger, Menu) {
 // </look-the-other-way>
 
   Ember.Application.initializer({
@@ -459,6 +500,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
     initialize: function(container, application) {
       container.register('component:ic-menu-item', Item);
+      container.register('component:ic-menu-link', Link);
       container.register('component:ic-menu-list', List);
       container.register('component:ic-menu-trigger', Trigger);
       container.register('component:ic-menu', Menu);
@@ -468,6 +510,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
   return {
     MenuItemComponent: Item,
+    MenuLinkComponent: Link,
     MenuListComponent: List,
     MenuTriggerComponent: Trigger,
     MenuComponent: Menu

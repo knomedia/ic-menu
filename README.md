@@ -24,6 +24,7 @@ __application.hbs__
   {{#ic-menu-list}}
     {{#ic-menu-item on-select="remove"}}Remove{{/ic-menu-item}}
     {{#ic-menu-item on-select="save"}}Save{{/ic-menu-item}}
+    {{#ic-menu-link href='/examples'}}View Examples{{/ic-menu-link}}
   {{/ic-menu-list}}
 {{/ic-menu}}
 ```
